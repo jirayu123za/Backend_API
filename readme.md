@@ -14,3 +14,8 @@ It includes the following:
 ```
 1. npm run server
 ```
+
+### Remaining task to be done
+
+- Oauth with CMU account
+- Save data from res to database
