@@ -2,11 +2,13 @@ import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
 import { getOAuthAccessToken, getCMUBasicInfo } from "../OAuthFunct.js";
 import session from "express-session";
+import User from "../models/userModel.js";
 
 // @description POST sign in user
 // @route POST /api/users/signIn
 // @access private
 
+/*
 const signInUser = asyncHandler(async (req, res, next) => {
   const authorizationCode = req.body.authorizationCode;
 
@@ -50,6 +52,7 @@ const signInUser = asyncHandler(async (req, res, next) => {
     throw new Error(`Internal server error ${error}`);
   }
 });
+*/
 
 const OAuthCallback = asyncHandler(async (req, res, next) => {
   const code = req.query.code;
@@ -62,4 +65,63 @@ const OAuthCallback = asyncHandler(async (req, res, next) => {
   res.redirect('/signIn/?valid=' + code);
 });
 
-export { signInUser, OAuthCallback };
+const userInfo = asyncHandler(async (req, res, next) => {
+  const code = req.query.valid;
+  const access_token = await getOAuthAccessToken(code);
+  const user = await getCMUBasicInfo(access_token);
+  //res.json(user);
+
+  //! Maybe can set it to jwt session
+  const information = {
+    accountType: user.itaccounttype_EN,
+    name: user.cmuitaccount_name,
+    email: user.cmuitaccount,
+    organization: user.organization_name_EN,
+    organizationCode: user.organization_code,
+  }
+
+  const { accountType, name, email, organization, organizationCode } = information;
+  /*
+  try {  
+    const newUser = await User.create({
+      accountType,
+      name,
+      email,
+      organization,
+      organizationCode,
+    })
+    res.send(newUser);
+  }catch(error){
+    throw new Error(`Save info user failed: ${error}`);
+  }
+  */
+
+  //! Check if the user already exists
+  try{
+    const existingUser = await User.findOne(
+      {
+        name: user.cmuitaccount_name,
+        email: user.cmuitaccount,
+      });
+
+      if(existingUser){
+        res.json(existingUser);
+        console.log("res.json(existingUser)");
+      }else{
+        //! save to the database
+        const newUser = await User.create({
+          accountType,
+          name,
+          email,
+          organization,
+          organizationCode,
+        })
+        res.json(newUser);
+        console.log("res.json(newUser)");
+      }
+    }catch(error){
+      throw new Error(`Cannot find user || Cannot save user`);
+  }
+});
+
+export { OAuthCallback, userInfo };
