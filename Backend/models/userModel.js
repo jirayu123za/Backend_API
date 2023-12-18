@@ -2,18 +2,39 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = mongoose.Schema({
+    accountType: {
+        type: String,
+        require: true,
+        unique: true
+    },
     name: {
         type: String,
-        require: true
+        require: true,
+        unique: true
     },
     email: {
         type: String,
         require: true,
         unique: true
     },
+    organization: {
+        type: String,
+        require: true,
+        unique: false
+    },
+    organizationCode: {
+        type: String,
+        require: true,
+        unique: false,
+    },
+    role: {
+        type: String,
+        default: 'USER',
+    },
     password: {
         type: String,
-        require: true
+        require: true,
+        unique: true
     },
 }, { timestamps: true });
 
