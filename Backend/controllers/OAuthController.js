@@ -4,55 +4,9 @@ import { getOAuthAccessToken, getCMUBasicInfo } from "../OAuthFunct.js";
 import session from "express-session";
 import User from "../models/userModel.js";
 
-// @description POST sign in user
+// @description GET sign in user
 // @route POST /api/users/signIn
 // @access private
-
-/*
-const signInUser = asyncHandler(async (req, res, next) => {
-  const authorizationCode = req.body.authorizationCode;
-
-  if (req.method !== "POST") {
-    res.status(404);
-    throw new Error(`Invalid HTTP method ${req.method}`);
-  }
-
-  if (typeof authorizationCode !== "string") {
-    res.status(400);
-    throw new Error(`Invalid authorization code ${authorizationCode}`);
-  }
-
-  try {
-    const accessToken = await getOAuthAccessToken(authorizationCode);
-    if (!accessToken) {
-      res.status(400);
-      throw new Error(`Can not get access token ${accessToken}`);
-    }
-
-    res.send(`Access token: ${accessToken}`);
-
-    // const cmuBasicInfo = await getCMUBasicInfo(accessToken);
-    // if (!cmuBasicInfo) {
-    //   res.status(400);
-    //   throw new Error(`Can not get basic info ${cmuBasicInfo}`);
-    // }
-
-    // const tokenPayload = {
-    //   accountType: cmuBasicInfo.itaccounttype_EN,
-    //   cmuAccount: cmuBasicInfo.cmuitaccount,
-    //   firstName: cmuBasicInfo.firstname_TH,
-    //   lastName: cmuBasicInfo.lastname_TH,
-    //   organization: cmuBasicInfo.organization_name_TH,
-    // };
-
-    // const token = generateToken(tokenPayload);
-    // console.log(token);
-  } catch (error) {
-    res.status(500);
-    throw new Error(`Internal server error ${error}`);
-  }
-});
-*/
 
 const OAuthCallback = asyncHandler(async (req, res, next) => {
   const code = req.query.code;
@@ -88,8 +42,8 @@ const userInfo = asyncHandler(async (req, res, next) => {
   //! Check if the user already exists
   try {
     const existingUser = await User.findOne({
-      name: user.cmuitaccount_name,
-      email: user.cmuitaccount,
+      name: information.name,
+      email: information.email,
     });
 
     if (existingUser) {
@@ -112,25 +66,27 @@ const userInfo = asyncHandler(async (req, res, next) => {
     //throw new Error(`Cannot find user || Cannot save user`);
   }
 
-  /*
+
   try{
     const user = await User.findOne({
-      name: "jirayu jitprem",
+      name: "JIRAYU JITPREM",
       email: "jirayu_jitprem@cmu.ac.th",
-    });
+      role: "USER",
+    })
 
-    if(user.role === "USER"){
+    if(user){
+      if(user.role === "USER"){
       await User.updateOne({ role: "ADMIN" });
-      res.json({ role: "ADMIN" });
+      //res.json({ role: "ADMIN" });
       console.log("user role updated to ADMIN");
     }else{
-      res.json(user);
+      //res.json(user);
       console.log("user role is already ADMIN");
-    }
+    }}
   }catch(error){
     throw new Error(`Cannot update user role`);
   }
-  */
+
 });
 
 export { OAuthCallback, userInfo };
