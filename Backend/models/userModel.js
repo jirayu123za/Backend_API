@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
     accountType: {
         type: String,
         require: true,
-        unique: true
+        unique: false,
     },
     name: {
         type: String,
@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         require: true,
-        unique: true
+        default: null,
     },
 }, { timestamps: true });
 
