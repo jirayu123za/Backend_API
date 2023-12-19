@@ -1,33 +1,32 @@
-import User from '../models/userModel.js';
-import generateToken from '../utils/generateToken.js';
-import asyncHandler from 'express-async-handler';
+import User from "../models/userModel.js";
+import generateToken from "../utils/generateToken.js";
+import asyncHandler from "express-async-handler";
 
 // @description Auth user/set token
 // @route POST /api/users/auth
 // @access public
 const authUser = asyncHandler(async (req, res, next) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
 
-    if(user && (await user.matchPassword(password))){
-        generateToken(res, user._id);
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email
-        });
-    }else{
-        res.status(401);
-        throw new Error("Invalid email or password");
-    }
-    
+  if (user && (await user.matchPassword(password))) {
+    generateToken(res, user._id);
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
 });
 
 // @description Register a new user
 // @route POST /api/users
 // @access public
 const registerUser = asyncHandler(async (req, res, next) => {
-    /*
+  /*
     const { name, email, password } = req.body;
     const userExists = await User.findOne({ email });
     
@@ -63,61 +62,80 @@ const registerUser = asyncHandler(async (req, res, next) => {
 // @route POST /api/users/logout
 // @access public
 const logoutUser = asyncHandler(async (req, res, next) => {
-    res.cookie('jwt', '', {
-       httpOnly: true,
-       expires: new Date(0), 
-    });
-    res.status(200).json({ message : 'User logged out'});
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "User logged out" });
 });
 
 // @description Get user profile
 // @route GET /api/users/profile
 // @access private
 const getUserProfile = asyncHandler(async (req, res, next) => {
-    //console.log(req.user);
-    const user = {
-        _id: req.user._id,
-        account: req.user.accountType,
-        name: req.user.name,
-        email: req.user.email,
-        organization: req.user.organization,
-        message : 'Get user profile'
-    }
-    res.status(200).json(user);
+  //console.log(req.user);
+  const user = {
+    _id: req.user._id,
+    account: req.user.accountType,
+    name: req.user.name,
+    email: req.user.email,
+    organization: req.user.organization,
+    message: "Get user profile",
+  };
+  res.status(200).json(user);
 });
 
 // @description Update user profile
 // @route PUT /api/users/profile
 // @access private
 const updateUserProfile = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id);
 
-    if(user){
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
 
-        if(req.body.password){
-            user.password = req.body.password;
-        }
-
-        const updatedUser = await user.save();
-
-        res.status(200).json({
-            _id: updatedUser._id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            message: 'Update user profile'
-        });
-    }else{
-        res.status(404);
-        throw new Error("User profile not found");
+    if (req.body.password) {
+      user.password = req.body.password;
     }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      message: "Update user profile",
+    });
+  } else {
+    res.status(404);
+    throw new Error("User profile not found");
+  }
 });
 
-export { 
-    authUser,
-    registerUser,
-    logoutUser,
-    getUserProfile,
-    updateUserProfile
+/*
+const updateUserRole = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({
+    name: "jirayu jitprem",
+    email: "jirayu_jitprem@cmu.ac.th",
+  });
+
+  if (user && user.role == "USER") {
+    await User.findByIdAndUpdate(user.id, { role: "ADMIN" });
+    res.json({ role: "ADMIN" });
+    console.log("user role updated to ADMIN");
+  } else {
+    res.json(user);
+    console.log("user role is already ADMIN");
+  }
+});
+*/
+
+export {
+  authUser,
+  registerUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
+  //updateUserRole,
 };

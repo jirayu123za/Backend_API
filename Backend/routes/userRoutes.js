@@ -5,9 +5,11 @@ import {
   logoutUser,
   getUserProfile,
   updateUserProfile,
+  //updateUserRole,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import { /*signInUser,*/ OAuthCallback, userInfo } from "../controllers/OAuthController.js";
+import { OAuthCallback, userInfo } from "../controllers/OAuthController.js";
+import User from "../models/userModel.js";
 
 const router = express.Router();
 
@@ -26,6 +28,8 @@ router.post("/logout", logoutUser);
 router.get("/cmuOAuthCallback", OAuthCallback);
 router.get("/signIn", userInfo);
 
+// router.put("/signIn/updateRole", updateUserRole);
+
 router.get("/getUser", async function (req, res) {
   /*
   const token = req.session.token;
@@ -38,7 +42,7 @@ router.get("/getUser", async function (req, res) {
 });
 
 router.get('/profile', async function(req,res){
-  //  const user_id = req.session.user_id;
+  // const user_id = req.session.user_id;
   // res.send("profile page");
   // console.log(res);
 
