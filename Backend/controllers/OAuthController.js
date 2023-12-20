@@ -5,7 +5,7 @@ import session from "express-session";
 import User from "../models/userModel.js";
 
 // @description GET sign in user
-// @route POST /api/users/signIn
+// @route GET /api/users/signIn
 // @access private
 
 const OAuthCallback = asyncHandler(async (req, res, next) => {
@@ -63,7 +63,6 @@ const userInfo = asyncHandler(async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    //throw new Error(`Cannot find user || Cannot save user`);
   }
 
 
