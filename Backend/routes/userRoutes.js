@@ -5,7 +5,9 @@ import {
   logoutUser,
   getUserProfile,
   updateUserProfile,
-  //updateUserRole,
+  homePage,
+  dashboardPage,
+  profilePage,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { OAuthCallback, userInfo } from "../controllers/OAuthController.js";
@@ -13,13 +15,10 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-// router.post("/signIn", signInUser);
-// router.get('/signIn', function (req, res) {
-//     res.send('Welcome jjj');
-// })
-router.post("/", registerUser);
-router.post("/auth", authUser);
-router.post("/logout", logoutUser);
+// router.post("/", registerUser);
+// router.post("/auth", authUser);
+// router.post("/logout", logoutUser);
+
 /*router
   .route("/profile")
   .get(protect, getUserProfile)
@@ -27,8 +26,6 @@ router.post("/logout", logoutUser);
 
 router.get("/cmuOAuthCallback", OAuthCallback);
 router.get("/signIn", userInfo);
-
-// router.put("/signIn/updateRole", updateUserRole);
 
 router.get("/getUser", async function (req, res) {
   /*
@@ -41,11 +38,9 @@ router.get("/getUser", async function (req, res) {
   */
 });
 
-router.get('/profile', async function(req,res){
-  // const user_id = req.session.user_id;
-  // res.send("profile page");
-  // console.log(res);
-
-})
+//! implement in progress
+router.get("/home", homePage);
+router.get("/admin", dashboardPage);
+router.get("/profile", profilePage);
 
 export default router;
