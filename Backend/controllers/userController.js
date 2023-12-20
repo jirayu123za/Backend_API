@@ -135,6 +135,11 @@ const profile = asyncHandler(async (req, res, next) => {
   res.send("Welcome to profile page");
 });
 
+const signIn = asyncHandler(async (req, res, next) => {
+  res.redirect(process.env.NEXT_PUBLIC_CMU_OAUTH_URL);
+  console.log("redirect to sign in with cmu authentication");
+});
+
 export {
   authUser,
   registerUser,
@@ -144,4 +149,5 @@ export {
   home,
   dashboard,
   profile,
+  signIn,
 };
