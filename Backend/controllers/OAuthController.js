@@ -4,29 +4,18 @@ import { getOAuthAccessToken, getCMUBasicInfo } from "../OAuthFunct.js";
 import session from "express-session";
 import User from "../models/userModel.js";
 
-// @description GET sign in user
-// @route GET /api/users/signIn
+// @description GET user info from func OAuthCallback
+// @route GET /api/cmuOAuthCallback
 // @access private
 
 const OAuthCallback = asyncHandler(async (req, res, next) => {
   const code = req.query.code;
-
-  if (!code) {
-    res.status(400);
-    throw new Error(`Invalid authorization code ${code}`);
-  }
-
-  res.redirect("/signIn/?valid=" + code);
-});
-
-const userInfo = asyncHandler(async (req, res, next) => {
-  const code = req.query.valid;
   const access_token = await getOAuthAccessToken(code);
   const user = await getCMUBasicInfo(access_token);
-  // log cmu basic info from access token
-  console.log("getCMUBasicInfo: ", (user));
 
-  //! Maybe can set it to jwt session
+  // log cmu basic info from access token
+  console.log("getCMUBasicInfo: ", user);
+
   const information = {
     accountType: user.itaccounttype_EN,
     name: user.firstname_EN + " " + user.lastname_EN,
@@ -47,8 +36,8 @@ const userInfo = asyncHandler(async (req, res, next) => {
     });
 
     if (existingUser) {
-      res.send(existingUser);
-      console.log("existingUser: " + (existingUser));
+      // res.send(existingUser);
+      console.log("existingUser: " + existingUser);
     } else {
       //! save to the database
       const newUser = await User.create({
@@ -58,34 +47,40 @@ const userInfo = asyncHandler(async (req, res, next) => {
         organization,
         organizationCode,
       });
-      res.json(newUser);
-      console.log("newUser: " + (newUser));
+      // res.json(newUser);
+      console.log("newUser: " + newUser);
     }
   } catch (error) {
     console.log(error);
   }
 
-
-  try{
+  try {
     const user = await User.findOne({
-      name: "JIRAYU JITPREM",
-      email: "jirayu_jitprem@cmu.ac.th",
-      role: "USER",
-    })
+      name: process.env.NAME_ADMIN,
+      email: process.env.EMAIL_ADMIN,
+      role: process.env.OLD_ROLE_ADMIN,
+    });
 
-    if(user){
-      if(user.role === "USER"){
-      await User.updateOne({ role: "ADMIN" });
-      //res.json({ role: "ADMIN" });
-      console.log("user role updated to ADMIN");
-    }else{
-      //res.json(user);
-      console.log("user role is already ADMIN");
-    }}
-  }catch(error){
+    if (user) {
+      if (user.role === process.env.OLD_ROLE_ADMIN) {
+        await user.updateOne({ role: "ADMIN" });
+        // res.json({ role: "ADMIN" });
+        console.log("user role updated to ADMIN");
+      } else {
+        // res.json(user);
+        console.log("user role is already ADMIN");
+      }
+    }
+  } catch (error) {
     throw new Error(`Cannot update user role`);
   }
 
+  if (!code) {
+    res.status(400);
+    throw new Error(`Invalid authorization code ${code}`);
+  }
+
+  res.redirect(process.env.REDIRECT_URL_TO_HOMEPAGE);
 });
 
-export { OAuthCallback, userInfo };
+export { OAuthCallback };
