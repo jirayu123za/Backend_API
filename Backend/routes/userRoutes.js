@@ -10,7 +10,7 @@ import {
   profile,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import { OAuthCallback, userInfo } from "../controllers/OAuthController.js";
+import { OAuthCallback } from "../controllers/OAuthController.js";
 import User from "../models/userModel.js";
 
 const router = express.Router();
@@ -26,7 +26,6 @@ const router = express.Router();
 
 //! completely route path
 router.get("/cmuOAuthCallback", OAuthCallback);
-router.get("/signIn", userInfo);
 
 /*
 router.get("/getUser", async function (req, res) {
