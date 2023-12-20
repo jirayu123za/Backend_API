@@ -61,12 +61,16 @@ const registerUser = asyncHandler(async (req, res, next) => {
 // @description Logout user
 // @route POST /api/users/logout
 // @access public
-const logoutUser = asyncHandler(async (req, res, next) => {
+const logout = asyncHandler(async (req, res, next) => {
+  console.log("user logged out page");
+  res.send("User logged out page");
+  /*
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
   });
   res.status(200).json({ message: "User logged out" });
+  */
 });
 
 // @description Get user profile
@@ -113,19 +117,19 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
   }
 });
 
-const homePage = asyncHandler(async (req, res, next) => {
+const home = asyncHandler(async (req, res, next) => {
   // log if user go to home page
   console.log("user go to home page");
   res.send("Welcome to home page");
 });
 
-const dashboardPage = asyncHandler(async (req, res, next) => {
+const dashboard = asyncHandler(async (req, res, next) => {
   // log if admin go to dashboard
   console.log("admin go to dashboard");
   res.send("Welcome to dashboard");
 });
 
-const profilePage = asyncHandler(async (req, res, next) => {
+const profile = asyncHandler(async (req, res, next) => {
   // log if user go to profile page
   console.log("user go to profile");
   res.send("Welcome to profile page");
@@ -134,10 +138,10 @@ const profilePage = asyncHandler(async (req, res, next) => {
 export {
   authUser,
   registerUser,
-  logoutUser,
+  logout,
   getUserProfile,
   updateUserProfile,
-  homePage,
-  dashboardPage,
-  profilePage,
+  home,
+  dashboard,
+  profile,
 };
