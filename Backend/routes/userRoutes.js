@@ -8,6 +8,7 @@ import {
   home,
   dashboard,
   profile,
+  signIn,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { OAuthCallback } from "../controllers/OAuthController.js";
@@ -45,5 +46,6 @@ router.get("/home", home);
 router.get("/admin", dashboard);
 router.get("/profile", profile);
 router.get("/logout", logout);
+router.get("/signIn", signIn);
 
 export default router;
