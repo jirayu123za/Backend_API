@@ -113,23 +113,23 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
   }
 });
 
-/*
-const updateUserRole = asyncHandler(async (req, res, next) => {
-  const user = await User.findOne({
-    name: "jirayu jitprem",
-    email: "jirayu_jitprem@cmu.ac.th",
-  });
-
-  if (user && user.role == "USER") {
-    await User.findByIdAndUpdate(user.id, { role: "ADMIN" });
-    res.json({ role: "ADMIN" });
-    console.log("user role updated to ADMIN");
-  } else {
-    res.json(user);
-    console.log("user role is already ADMIN");
-  }
+const homePage = asyncHandler(async (req, res, next) => {
+  // log if user go to home page
+  console.log("user go to home page");
+  res.send("Welcome to home page");
 });
-*/
+
+const dashboardPage = asyncHandler(async (req, res, next) => {
+  // log if admin go to dashboard
+  console.log("admin go to dashboard");
+  res.send("Welcome to dashboard");
+});
+
+const profilePage = asyncHandler(async (req, res, next) => {
+  // log if user go to profile page
+  console.log("user go to profile");
+  res.send("Welcome to profile page");
+});
 
 export {
   authUser,
@@ -137,5 +137,7 @@ export {
   logoutUser,
   getUserProfile,
   updateUserProfile,
-  //updateUserRole,
+  homePage,
+  dashboardPage,
+  profilePage,
 };
