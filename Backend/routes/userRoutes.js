@@ -2,12 +2,12 @@ import express from "express";
 import {
   authUser,
   registerUser,
-  logoutUser,
+  logout,
   getUserProfile,
   updateUserProfile,
-  homePage,
-  dashboardPage,
-  profilePage,
+  home,
+  dashboard,
+  profile,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { OAuthCallback, userInfo } from "../controllers/OAuthController.js";
@@ -24,23 +24,27 @@ const router = express.Router();
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);*/
 
+//! completely route path
 router.get("/cmuOAuthCallback", OAuthCallback);
 router.get("/signIn", userInfo);
 
+/*
 router.get("/getUser", async function (req, res) {
-  /*
+  
   const token = req.session.token;
   if (token) {
     res.send(token);
   }
 
   res.send("not found access token");
-  */
+ 
 });
+ */
 
 //! implement in progress
-router.get("/home", homePage);
-router.get("/admin", dashboardPage);
-router.get("/profile", profilePage);
+router.get("/home", home);
+router.get("/admin", dashboard);
+router.get("/profile", profile);
+router.get("/logout", logout);
 
 export default router;
