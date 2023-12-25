@@ -63,7 +63,13 @@ const registerUser = asyncHandler(async (req, res, next) => {
 // @access public
 const logout = asyncHandler(async (req, res, next) => {
   console.log("user logged out page");
-  res.send("User logged out page");
+
+  //! destroy cookies then redirect to sign in page page
+
+
+  // res.send("User logged out page");
+  res.redirect("/signIn");
+
   /*
   res.cookie("jwt", "", {
     httpOnly: true,
